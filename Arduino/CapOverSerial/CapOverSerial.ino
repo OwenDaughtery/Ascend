@@ -1,9 +1,11 @@
 #include <CapacitiveSensor.h>
 
 CapacitiveSensor cs_4_2 = CapacitiveSensor(4,2);        // 10M resistor between pins 4 & 2, pin 2 is sensor pin, add a wire and or foil if desired
-CapacitiveSensor cs_14_15 = CapacitiveSensor(14,15);        // 10M resistor between pins 14 & 15, pin 15 is sensor pin, add a wire and or foil if desired
+CapacitiveSensor cs_8_6 = CapacitiveSensor(8,6);        // 10M resistor between pins 8 & 6, pin 6 is sensor pin, add a wire and or foil if desired
 
-long last = 0;
+long last1 = 0;
+long last2 = 0;
+
 float cof = 0.3;
 
 void setup(){
@@ -13,27 +15,22 @@ void setup(){
 
 void loop(){
     long start = millis();
-    long total =  cs_4_2.capacitiveSensor(30);
-    long temp = last + cof * (total - last);
-        
-    long totaltest = cs_14_15.capacitiveSensor(30); //is a test
-
     
-    //Serial.print("Test Commencing");
-    //Serial.print(totaltest);
-    //Serial.print("\t"); 
-    //Serial.println("");
-    //Serial.print("Test Ending");    
+    long total1 =  cs_4_2.capacitiveSensor(30);
+    long temp1 = last1 + cof * (total1 - last1);
+        
+    long total2 = cs_8_6.capacitiveSensor(30);
+    long temp2 = last2 + cof * (total2 - last2);
+   
 
     delay(10);                             // arbitrary delay to limit data to serial port 
-    Serial.print(totaltest);
-    Serial.print(" ");
-    Serial.println(temp);
-    //Serial.print(" ");
-    //Serial.print(50);
+    Serial.print(temp1);
+    Serial.print("\t");
+    Serial.println(temp2);
     Serial.print("\t"); 
     Serial.print("");
 
-    last = temp;
+    last1 = temp1;
+    last2 = temp2;
     
 }
