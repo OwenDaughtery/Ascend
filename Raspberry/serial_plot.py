@@ -65,7 +65,6 @@ class DataReader(threading.Thread):
                 values = [int(x) for x in valid]
                 print(values)
                 lock.acquire()
-                #self.data = values
                 self.data=roll(self.data,-1)
                 self.data[-1]=values[0]
                 lock.release()

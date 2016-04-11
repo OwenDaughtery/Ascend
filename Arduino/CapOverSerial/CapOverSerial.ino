@@ -30,7 +30,7 @@ long thresholds[8] = {
   0,0,0,0,0,0,0,0
 };
 
-float thresholdMargin = 1.1;
+float thresholdMargin = 1.3;
 long scale;
 
 float cof = 0.4;
@@ -56,27 +56,32 @@ void loop(){
     timeElapsed = 0;
     if( debouncer.fell() ){
       for(int i=0; i<8; i++){
-        thresholds[i] = lasts[i] * thresholdMargin;
+        thresholds[i] = thresholdMargin * lasts[i];
       }
       
+    }else if(debouncer.read() == LOW){      
+      for(int i=0; i<8; i++){
+        thresholds[i] = max(thresholdMargin * lasts[i], thresholds[i]);
+      }
     }
 
-    scale = dial.read() / 48;
+
+    scale = dial.read();
     if( scale < minScale ){
-      dial.write(scale=48*minScale);
+      dial.write(scale=minScale);
     }
     if( scale > maxScale ){
-      dial.write(scale=48*maxScale);
+      dial.write(scale=maxScale);
     }
 
 
   for(int i=0; i<8; i++){
     long total =  cs[i].capacitiveSensor(30);
     long temp = lasts[i] + cof * (total - lasts[i]);   
-    long adjustedVal = scale * sqrt( temp-thresholds[i] );
+    long adjustedVal = scale * sqrt(max(temp-thresholds[i],0));
     if (i!=0)
       Serial.print(",");
-    Serial.print( adjustedVal );  
+    Serial.print(min(255, adjustedVal ));  
     lasts[i] = temp;
    }
    Serial.println("");
@@ -89,4 +94,17 @@ void loop(){
 }
 
 //thereshold is subtractor from values, inverse square law 1\r2, logarthmic, swaure root it, have cooeficient, foil ground plane, grounding of building
+//numpy 2d array 
+//header pins, enamel wire
+
+//get enamel wire
+//tape up cardboard
+//connect cardboard to arduino
+//run arduino code 
+
+//run python code
+//code python code so all 8 lines are plotted
+//get it running on Pi
+//ground it
+//
 
