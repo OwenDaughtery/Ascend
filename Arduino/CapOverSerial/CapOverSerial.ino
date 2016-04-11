@@ -16,7 +16,7 @@ long lasts[8] = {
 };
 
 
-float cof = 0.3;
+float cof = 0.4;
 
 void setup(){
   for(int i=0; i<8; i++){
@@ -38,7 +38,7 @@ void loop(){
    }
    Serial.println("");
 
-    delay(10);                             // arbitrary delay to limit data to serial port     
+   // delay(10);                             // arbitrary delay to limit data to serial port     
 
 }
 
