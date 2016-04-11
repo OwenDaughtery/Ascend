@@ -33,7 +33,7 @@ long thresholds[8] = {
 float thresholdMargin = 1.1;
 long scale;
 
-float cof = 0.3;
+float cof = 0.4;
 
 void setup(){
 
@@ -80,8 +80,6 @@ void loop(){
     lasts[i] = temp;
    }
    Serial.println("");
-
-
 
     long delayDuration = 40-timeElapsed;
     if( delayDuration > 0 ){
