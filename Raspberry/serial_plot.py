@@ -29,7 +29,7 @@ from struct import unpack
 import sys
 
 import serial.tools.list_ports
-port = serial.tools.list_ports.comports()[0][0]
+port = list(serial.tools.list_ports.comports())[0][0]
 
 pygame.init()
 
@@ -56,11 +56,18 @@ class DataReader(threading.Thread):
         val = 0                                             #Read value
         
         while not self.stopthread.isSet() :
-        	while ser.inWaiting()>0:
-				line = int(ser.readline())
-				values = [int(x) for x in  line.split(",")]
-				lock.acquire()
-                self.data = values
+            while self.ser.inWaiting()>0:
+                line = self.ser.readline()
+                #print(line.split(b','))
+                valid=line.split(b',')
+                if len(valid)!=8:
+                    continue
+                values = [int(x) for x in valid]
+                print(values)
+                lock.acquire()
+                #self.data = values
+                self.data=roll(self.data,-1)
+                self.data[-1]=values[0]
                 lock.release()
             """
             rslt = self.ser.read(num_bytes)             #Read serial data
