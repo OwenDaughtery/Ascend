@@ -28,22 +28,14 @@ from struct import unpack
 
 import sys
 
+import serial.tools.list_ports
+port = serial.tools.list_ports.comports()[0][0]
+
 pygame.init()
 
 global lock
 lock = threading.Lock()
 
-
-""" serial data structure:
-
-   For synchronization purposes, the following scheme was chosen:
-   A0 data:   A09 (MSB) A08 A07 A06 A05 A04 A03 A02 A01 A00 (LSB)
-   sent as byte 1:   1 1 1 A09 A08 A07 A06 A05
-       and byte 2:   0 1 1 A04 A03 A02 A01 A00
-
-           byte 1  A0 5 most significant bits + 224 (128+64+32), legitimate values are between 224 and 255
-           byte 2  A0 5 least significant bits + 96 (64+32)    , legitimate values are between 96 and 127
-"""
 
             
 class DataReader(threading.Thread):
@@ -53,7 +45,7 @@ class DataReader(threading.Thread):
     
     def __init__(self):
         threading.Thread.__init__(self)                     #Call constructor of parent
-        self.ser = Serial("/dev/ttyACM1",115200)            #Initialize serial port
+        self.ser = Serial(port,9600)            #Initialize serial port
         self.data_buff_size = 200                           #Buffer size
         self.data = zeros(self.data_buff_size)              #Data buffer
         self.start()
@@ -64,6 +56,13 @@ class DataReader(threading.Thread):
         val = 0                                             #Read value
         
         while not self.stopthread.isSet() :
+        	while ser.inWaiting()>0:
+				line = int(ser.readline())
+				values = [int(x) for x in  line.split(",")]
+				lock.acquire()
+                self.data = values
+                lock.release()
+            """
             rslt = self.ser.read(num_bytes)             #Read serial data
             byte_array = unpack('%dB'%num_bytes,rslt)   #Convert serial data to array of numbers
 
@@ -81,7 +80,7 @@ class DataReader(threading.Thread):
                         self.data[-1] = val
                         lock.release()
 
-
+            """
                     
         self.ser.close()
             
