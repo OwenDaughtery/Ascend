@@ -11,10 +11,14 @@ ser = serial.Serial(port, 9600)
 val = 0
 
 while True:
-	while ser.inWaiting()>0:
-		val = int(ser.readline())
-	print( val )
-	sample(PERC_BELL,rate=0.5)
-	time.sleep(0.7)
+        while ser.inWaiting()>0:
+                line = ser.readline()
+                valid=line.split(b',')
+                if len(valid)!=8:
+                        continue
 
+                values=[int(x) for x in valid]
+                print(values)
+                #sample(PERC_BELL,rate=0.5)
+                #time.sleep(0.1)
 
