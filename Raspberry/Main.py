@@ -16,5 +16,6 @@ while True:
 	print( val )
 	sample(PERC_BELL,rate=0.5)
 	time.sleep(0.7)
+	
 
 
