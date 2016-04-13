@@ -65,10 +65,10 @@ class DataReader(threading.Thread):
                 values = [int(x) for x in valid]
                 print(values)
                 lock.acquire()
-                #self.data = values
                 self.data=roll(self.data,-1)
                 self.data[-1]=values[0]
                 lock.release()
+                
             """
             rslt = self.ser.read(num_bytes)             #Read serial data
             byte_array = unpack('%dB'%num_bytes,rslt)   #Convert serial data to array of numbers
