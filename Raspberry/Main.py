@@ -3,7 +3,7 @@ from serial import *
 from time import sleep
 
 import serial.tools.list_ports
-port = serial.tools.list_ports.comports()[0][0]
+port = list(serial.tools.list_ports.comports())[0][0]
 
 
 

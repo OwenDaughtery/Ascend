@@ -106,5 +106,5 @@ void loop(){
 //code python code so all 8 lines are plotted
 //get it running on Pi
 //ground it
-//
+//notes are: A3, B3, D4, E4, F#4, A4, B4, D5
 
