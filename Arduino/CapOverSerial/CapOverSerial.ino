@@ -100,14 +100,14 @@ void loop(){
       delay(delayDuration);                             // arbitrary delay to limit data to serial port     
     }*/
 
-    for(int i=0; i<8; i++){
+    /*for(int i=0; i<8; i++){
       pinMode(pins[i], OUTPUT);
       digitalWrite(pins[i], LOW);
       }
     delay(5);
     for(int i=0; i<8; i++){
       pinMode(pins[i], INPUT);
-      }
+      }*/
       
 }
 

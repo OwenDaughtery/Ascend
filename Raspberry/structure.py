@@ -46,15 +46,18 @@ while True:
     for y in range (1,5):
         print(str(bar) + "th bar")
         for i in range (0,8):
-            
+            amount_values=0
+            sum_values=[0,0,0,0,0,0,0,0]
             while ser.inWaiting()>0:
                 line = ser.readline()
+                print(line)
                 valid=line.split(b',')
                 if len(valid)!=8:
                     continue
                 values=[int(x) for x in valid]
+                sum_values=[a + b for a, b in zip(values, sum_values)]
+                amount_values+=1
 
-            #have if statement here registering whether the section is being touched and if so:
             print(values)
             get_highest(values)
             current_section=sorted_sections[i]['section']
