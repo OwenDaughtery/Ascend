@@ -95,10 +95,10 @@ void loop(){
    }
    Serial.println("");
 
-    /*long delayDuration = 40-timeElapsed;
+    long delayDuration = 40-timeElapsed;
     if( delayDuration > 0 ){
       delay(delayDuration);                             // arbitrary delay to limit data to serial port     
-    }*/
+    }
 
     /*for(int i=0; i<8; i++){
       pinMode(pins[i], OUTPUT);
@@ -125,4 +125,5 @@ void loop(){
 //get it running on Pi
 //ground it
 //notes are: A3, B3, D4, E4, F#4, A4, B4, D5
-
+//one thing we can do is to loop it out the botom and top
+//send pin would go out on a second 
