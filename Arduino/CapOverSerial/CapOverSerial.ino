@@ -5,7 +5,7 @@
 
 #define minScale 1
 #define maxScale 255
-#define raw 0
+#define numSensors 3
 
 CapacitiveSensor cs[8] = {
   CapacitiveSensor(5, 6), // 10M resistor between pins 5 & 6, pin 6 is sensor pin, add a wire and or foil if desired
@@ -31,10 +31,7 @@ long thresholds[8] = {
   0,0,0,0,0,0,0,0
 };
 
-int pins[8] = {
-  6, 7, 8, 9, 10, 14, 15, 16
-};
-float thresholdMargin = 1.5;
+float thresholdMargin = 1.1;
 long scale;
 
 float cof = 0.4;
@@ -48,49 +45,40 @@ void setup(){
   debouncer.attach(2);
   debouncer.interval(10);
   
-  for(int i=0; i<8; i++){
+  for(int i=0; i<numSensors; i++){
      cs[i].set_CS_AutocaL_Millis(0xFFFFFFFF);     // turn off autocalibrate on channel 1 - just as an example
+     cs[i].set_CS_Timeout_Millis(10);
    }
    
-   Serial.begin(9600);  
+   Serial.begin(115200);  
 }
 
 void loop(){
     debouncer.update();
     timeElapsed = 0;
     if( debouncer.fell() ){
-      for(int i=0; i<8; i++){
-        thresholds[i] = thresholdMargin * lasts[i];
+      for(int i=0; i<numSensors; i++){
+        thresholds[i] = lasts[i] * thresholdMargin;
       }
       
-    }else if(debouncer.read() == LOW){      
-      for(int i=0; i<8; i++){
-        thresholds[i] = max(thresholdMargin * lasts[i], thresholds[i]);
-      }
     }
 
-
-    scale = dial.read();
+    scale = dial.read() / 48;
     if( scale < minScale ){
-      dial.write(scale=minScale);
+      dial.write(scale=48*minScale);
     }
     if( scale > maxScale ){
-      dial.write(scale=maxScale);
+      dial.write(scale=48*maxScale);
     }
 
 
-  for(int i=0; i<8; i++){
-    long total =  cs[i].capacitiveSensor(30);
-    //long total = 0;
+  for(int i=0; i<numSensors; i++){
+    long total =  cs[i].capacitiveSensor(5);
     long temp = lasts[i] + cof * (total - lasts[i]);   
-    long adjustedVal = scale * sqrt(max(temp-thresholds[i],0));
+    long adjustedVal = scale * sqrt( temp-thresholds[i] );
     if (i!=0)
       Serial.print(",");
-      #if raw
-        Serial.print(total);
-      #else      
-        Serial.print(min(255, adjustedVal ));  
-      #endif
+    Serial.print( adjustedVal );  
     lasts[i] = temp;
    }
    Serial.println("");
@@ -100,15 +88,6 @@ void loop(){
       delay(delayDuration);                             // arbitrary delay to limit data to serial port     
     }
 
-    /*for(int i=0; i<8; i++){
-      pinMode(pins[i], OUTPUT);
-      digitalWrite(pins[i], LOW);
-      }
-    delay(5);
-    for(int i=0; i<8; i++){
-      pinMode(pins[i], INPUT);
-      }*/
-      
 }
 
 //thereshold is subtractor from values, inverse square law 1\r2, logarthmic, swaure root it, have cooeficient, foil ground plane, grounding of building
@@ -127,3 +106,4 @@ void loop(){
 //notes are: A3, B3, D4, E4, F#4, A4, B4, D5
 //one thing we can do is to loop it out the botom and top
 //send pin would go out on a second 
+
