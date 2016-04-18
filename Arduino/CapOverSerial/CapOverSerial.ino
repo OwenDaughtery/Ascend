@@ -6,6 +6,7 @@
 #define minScale 1
 #define maxScale 255
 #define raw 0
+#define numSensors 4
 
 CapacitiveSensor cs[8] = {
   CapacitiveSensor(5, 6), // 10M resistor between pins 5 & 6, pin 6 is sensor pin, add a wire and or foil if desired
@@ -50,21 +51,22 @@ void setup(){
   
   for(int i=0; i<8; i++){
      cs[i].set_CS_AutocaL_Millis(0xFFFFFFFF);     // turn off autocalibrate on channel 1 - just as an example
+     cs[i].set_CS_Timeout_Millis(500);
    }
    
-   Serial.begin(9600);  
+   Serial.begin(115200);  
 }
 
 void loop(){
     debouncer.update();
     timeElapsed = 0;
     if( debouncer.fell() ){
-      for(int i=0; i<8; i++){
+      for(int i=0; i<numSensors; i++){
         thresholds[i] = thresholdMargin * lasts[i];
       }
       
     }else if(debouncer.read() == LOW){      
-      for(int i=0; i<8; i++){
+      for(int i=0; i<numSensors; i++){
         thresholds[i] = max(thresholdMargin * lasts[i], thresholds[i]);
       }
     }
@@ -79,8 +81,8 @@ void loop(){
     }
 
 
-  for(int i=0; i<8; i++){
-    long total =  cs[i].capacitiveSensor(30);
+  for(int i=0; i<numSensors; i++){
+    long total =  cs[i].capacitiveSensor(120);
     //long total = 0;
     long temp = lasts[i] + cof * (total - lasts[i]);   
     long adjustedVal = scale * sqrt(max(temp-thresholds[i],0));
@@ -95,10 +97,12 @@ void loop(){
    }
    Serial.println("");
 
+  /*
     long delayDuration = 40-timeElapsed;
     if( delayDuration > 0 ){
       delay(delayDuration);                             // arbitrary delay to limit data to serial port     
     }
+    */
 
     /*for(int i=0; i<8; i++){
       pinMode(pins[i], OUTPUT);
@@ -108,7 +112,7 @@ void loop(){
     for(int i=0; i<8; i++){
       pinMode(pins[i], INPUT);
       }*/
-      
+     
 }
 
 //thereshold is subtractor from values, inverse square law 1\r2, logarthmic, swaure root it, have cooeficient, foil ground plane, grounding of building
