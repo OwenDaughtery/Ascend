@@ -7,16 +7,17 @@
 #define maxScale 255
 #define raw 0
 #define numSensors 4
+#define sendPin 23
 
 CapacitiveSensor cs[8] = {
-  CapacitiveSensor(5, 6), // 10M resistor between pins 5 & 6, pin 6 is sensor pin, add a wire and or foil if desired
-  CapacitiveSensor(5, 7),
-  CapacitiveSensor(5, 8),
-  CapacitiveSensor(5, 9),
-  CapacitiveSensor(5, 10),
-  CapacitiveSensor(5, 14),
-  CapacitiveSensor(5, 15),
-  CapacitiveSensor(5, 16)
+  CapacitiveSensor(sendPin, 6), // 10M resistor between pins 5 & 6, pin 6 is sensor pin, add a wire and or foil if desired
+  CapacitiveSensor(sendPin, 7),
+  CapacitiveSensor(sendPin, 8),
+  CapacitiveSensor(sendPin, 9),
+  CapacitiveSensor(sendPin, 14),
+  CapacitiveSensor(sendPin, 15),
+  CapacitiveSensor(sendPin, 16),
+  CapacitiveSensor(sendPin, 17)
 };
 
 Encoder dial(3,4);
