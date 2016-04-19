@@ -29,11 +29,18 @@ sections=[section1, section2, section3, section4, section5, section6, section7, 
 def get_highest(values):
     max_value = max(values)
     max_index = values.index(max_value)
-    print(max_value)
-    print(max_index)
+    counter=0
+    for y in range(0,4):
+        if values[y]>35:
+            counter+=1
+    return counter
+            
+#    print("max value" + str(max_value))
+#    print("max_index" + str(max_index))
+#    print("")
 
 while True:
-    for x in range(0,8):#populating dictonaries with randoms
+    for x in range(0,4):#populating dictonaries with randoms#AMOUNT OF SECTIONS
         rand_note=notes[randint(0,7)]
         rand_length=lengths[randint(0,5)]
         rand_pos=position[randint(0,7)]        
@@ -45,21 +52,23 @@ while True:
     bar=1
     for y in range (1,5):
         print(str(bar) + "th bar")
-        for i in range (0,8):
+        for i in range (0,3):#AMOUNT OF SECTIONS
             amount_values=0
             sum_values=[0,0,0,0,0,0,0,0]
             while ser.inWaiting()>0:
                 line = ser.readline()
-                print(line)
+                #print(line)
                 valid=line.split(b',')
-                if len(valid)!=8:
+                if len(valid)!=4:#AMOUNT OF SECTIONS
+                    print("a")
                     continue
                 values=[int(x) for x in valid]
                 sum_values=[a + b for a, b in zip(values, sum_values)]
                 amount_values+=1
 
+            #print(sum_values)
             print(values)
-            get_highest(values)
+            activated=get_highest(values)
             current_section=sorted_sections[i]['section']
             print("note " + str(i+1))#debug text so I don't lose myself
             print("current section: " + str(current_section))

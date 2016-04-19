@@ -36,7 +36,7 @@ long thresholds[8] = {
 int pins[8] = {
   6, 7, 8, 9, 10, 14, 15, 16
 };
-float thresholdMargin = 1.5;
+float thresholdMargin = 1.4;
 long scale;
 
 float cof = 0.4;
@@ -83,7 +83,7 @@ void loop(){
 
 
   for(int i=0; i<numSensors; i++){
-    long total =  cs[i].capacitiveSensor(120);
+    long total =  cs[i].capacitiveSensor(30);
     //long total = 0;
     long temp = lasts[i] + cof * (total - lasts[i]);   
     long adjustedVal = scale * sqrt(max(temp-thresholds[i],0));
@@ -109,7 +109,9 @@ void loop(){
       pinMode(pins[i], OUTPUT);
       digitalWrite(pins[i], LOW);
       }
+
     delay(5);
+
     for(int i=0; i<8; i++){
       pinMode(pins[i], INPUT);
       }*/
