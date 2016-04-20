@@ -14,10 +14,6 @@ CapacitiveSensor cs[8] = {
   CapacitiveSensor(sendPin, 7),
   CapacitiveSensor(sendPin, 8),
   CapacitiveSensor(sendPin, 9),
-  CapacitiveSensor(sendPin, 14),
-  CapacitiveSensor(sendPin, 15),
-  CapacitiveSensor(sendPin, 16),
-  CapacitiveSensor(sendPin, 17)
 };
 
 Encoder dial(3,4);
@@ -25,16 +21,16 @@ Bounce debouncer = Bounce();
 
 elapsedMillis timeElapsed;
 
-long lasts[8] = {
-  0,0,0,0,0,0,0,0  
+long lasts[4] = {
+  0,0,0,0
 };
 
-long thresholds[8] = {
-  0,0,0,0,0,0,0,0
+long thresholds[4] = {
+  0,0,0,0
 };
 
 int pins[8] = {
-  6, 7, 8, 9, 10, 14, 15, 16
+  6, 7, 8, 9
 };
 float thresholdMargin = 1.4;
 long scale;
