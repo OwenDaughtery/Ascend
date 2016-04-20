@@ -9,7 +9,7 @@
 #define numSensors 4
 #define sendPin 23
 
-CapacitiveSensor cs[8] = {
+CapacitiveSensor cs[4] = {
   CapacitiveSensor(sendPin, 6), // 10M resistor between pins 5 & 6, pin 6 is sensor pin, add a wire and or foil if desired
   CapacitiveSensor(sendPin, 7),
   CapacitiveSensor(sendPin, 8),
@@ -32,7 +32,7 @@ long thresholds[4] = {
 int pins[8] = {
   6, 7, 8, 9
 };
-float thresholdMargin = 1.4;
+float thresholdMargin = 1.1;
 long scale;
 
 float cof = 0.4;

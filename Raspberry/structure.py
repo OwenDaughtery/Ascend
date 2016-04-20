@@ -68,13 +68,9 @@ while True:
             print("note " + str(i+1))#debug text so I don't lose myself            
             if activated!="NULL":
                 if sorted_sections[i]['section']>activated:
-                    print("PLAY THIS NOTE")
                     #print("current section note: " + str(current_section_note))
                     print(sorted_sections[i])
             print("")
-
-
-
             sleep(1)
         bar+=1
         

@@ -14,7 +14,7 @@ while True:
         while ser.inWaiting()>0:
                 line = ser.readline()
                 valid=line.split(b',')
-                if len(valid)!=8:
+                if len(valid)!=4:
                         continue
                 values=[int(x) for x in valid]
                 print(values)
