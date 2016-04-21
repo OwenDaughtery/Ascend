@@ -5,15 +5,15 @@
 
 #define minScale 1
 #define maxScale 255
-#define raw 0
+#define raw 1
 #define numSensors 4
 #define sendPin 23
 
 CapacitiveSensor cs[4] = {
-  CapacitiveSensor(sendPin, 6), // 10M resistor between pins 5 & 6, pin 6 is sensor pin, add a wire and or foil if desired
-  CapacitiveSensor(sendPin, 7),
-  CapacitiveSensor(sendPin, 8),
-  CapacitiveSensor(sendPin, 9),
+  CapacitiveSensor(17, 6), // 10M resistor between pins 5 & 6, pin 6 is sensor pin, add a wire and or foil if desired
+  CapacitiveSensor(16, 8),
+  CapacitiveSensor(15, 10),
+  CapacitiveSensor(14, 12),
 };
 
 Encoder dial(3,4);
@@ -29,7 +29,7 @@ long thresholds[4] = {
   0,0,0,0
 };
 
-int pins[8] = {
+int pins[4] = {
   6, 7, 8, 9
 };
 float thresholdMargin = 1.1;
