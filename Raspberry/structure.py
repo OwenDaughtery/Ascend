@@ -19,7 +19,9 @@ section3 = {'section': 3, 'note': "", 'length': 0, 'position': 0}
 section4 = {'section': 4, 'note': "", 'length': 0, 'position': 0}
 
 sections=[section1, section2, section3, section4]
-start_flag=0
+bar=0
+signature=4
+
 
 #Initialization over
 
@@ -32,59 +34,52 @@ def get_highest(values):
     return max_index
             
 
-while True:
+positions=shuffle(range(8))
+for x in range(0,4):#populating dictonaries with randoms
+    rand_note=notes[randint(0,8)]
+    rand_length=lengths[randint(0,5)]
+    rand_pos=positions[x]
+    sections[x]['note']=rand_note
+    sections[x]['length']=rand_length
+    sections[x]['position']=rand_pos
     
-    if start_flag==0:
-        positions=shuffle(range(7))
-        for x in range(0,4):#populating dictonaries with randoms
-            rand_note=notes[randint(0,7)]
-            rand_length=lengths[randint(0,5)]
-            rand_pos=positions[x]
-            
-            
-            sections[x]['note']=rand_note
-            sections[x]['length']=rand_length
-            sections[x]['position']=rand_pos
-        start_flag=1
+while True:
 
-
-    sorted_sections = sorted(sections, key=itemgetter("position"))#sort all dictionaries in order of their position
-    bar=1
-    for y in range (1,5):
-        positions=shuffle(range(7))
-        rand_note=notes[randint(0,7)]
-        rand_length=lengths[randint(0,5)]
+    rand_section=randint(0,4)
+    rand_note=notes[randint(0,8)]
+    rand_length=lengths[randint(0,5)]
+    rand_pos_index=randint(4,8)
+    rand_pos=positions[rand_pos_index]
+    positions[rand_pos_index]=sections[rand_section]['position']
+    sections[rand_section]['note']=rand_note
+    sections[rand_section]['length']=rand_length
+    sections[rand_section]['position']=rand_pos
+    
+    print(", ".join([section['note'] for section in sections]))
+    for i in range(8):
         
-        sections[y-1]['note']=rand_note
-        sections[y-1]['length']=rand_length
-        sections[x]['position']=rand_pos
+        amount_values=0
+        sum_values=[0,0,0,0]
+        while ser.inWaiting()>0:
+            line = ser.readline()
+            valid=line.split(b',')
+            if len(valid)!=4:
+                continue
+            values=[int(x) for x in valid]
+            sum_values=[a + b for a, b in zip(values, sum_values)]
+            amount_values+=1
 
-        print(str(bar) + "th bar")
-        for i in range (0,4):
-            amount_values=0
-            sum_values=[0,0,0,0]
-            while ser.inWaiting()>0:
-                line = ser.readline()
-                valid=line.split(b',')
-                if len(valid)!=4:
-                    continue
-                values=[int(x) for x in valid]
-                sum_values=[a + b for a, b in zip(values, sum_values)]
-                amount_values+=1
+        activated=get_highest(values)           
 
-            
-            #print(values)
-            activated=get_highest(values)
-            #print(activated)
-            
-            print("note " + str(i+1))#debug text so I don't lose myself            
-            if activated!="NULL":
-                if sorted_sections[i]['section']>activated:
-                    print("current section note: " + str(current_section_note))
-                    #print(sorted_sections[i])
-            print(str(sorted_sections[i]['note']))
-            play(sorted_sections[i]['note'])
+        note=False
+        for c in range(4):
+            if sections[c]['position']==i:
+                note=sections[c]
+                break
+        if note!=False:
+            play(note['note'], sustain=note['length'])
 
-            sleep(1)
-        bar+=1
+        sleep(signature/8)
+        
+    bar+=1
         
