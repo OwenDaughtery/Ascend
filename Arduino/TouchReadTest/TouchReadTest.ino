@@ -89,5 +89,5 @@ void loop() {
     Serial.print( min( max( output, 0 ), 255) );
   }
   Serial.println();
-  delay(250);
+  delay(40);
 }
