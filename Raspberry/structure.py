@@ -1,5 +1,5 @@
 from time import *
-from random import randint
+from random import *
 from operator import itemgetter
 from psonic import *
 from serial import *
@@ -8,19 +8,17 @@ port = list(serial.tools.list_ports.comports())[0][0]
 ser = serial.Serial(port, 9600)
 val = 0
 
-notes=[A3, B3, D4, E4, Fs4, A4, B4, D5]
-lengths=[1.5, 1.4, 1.3, 1.2, 1.1, 1]
-position=[1,2,3,4]
+notes=[A3, B3, D4, E4, Fs4, A4, B4]
+lengths=[0.125, 0.25, 0.375, 0.5]
 values=[0, 0, 0, 0]
+positions=list(range(16))
 
-section1 = {'section': 1, 'note': "", 'length': 0, 'position': 0}
-section2 = {'section': 2, 'note': "", 'length': 0, 'position': 0}
-section3 = {'section': 3, 'note': "", 'length': 0, 'position': 0}
-section4 = {'section': 4, 'note': "", 'length': 0, 'position': 0}
 
-sections=[section1, section2, section3, section4]
+sections=[]
+for i in range(8):
+    sections.append({'section': i+1})
 bar=0
-signature=4
+signature=2
 
 
 #Initialization over
@@ -34,10 +32,11 @@ def get_highest(values):
     return max_index
             
 
-positions=shuffle(range(8))
-for x in range(0,4):#populating dictonaries with randoms
-    rand_note=notes[randint(0,8)]
-    rand_length=lengths[randint(0,5)]
+shuffle(positions)
+
+for x in range(len(sections)):#populating dictonaries with randoms
+    rand_note=notes[randint(0, len(notes)-1)]
+    rand_length=lengths[randint(0, len(lengths)-1)]
     rand_pos=positions[x]
     sections[x]['note']=rand_note
     sections[x]['length']=rand_length
@@ -45,18 +44,22 @@ for x in range(0,4):#populating dictonaries with randoms
     
 while True:
 
-    rand_section=randint(0,4)
-    rand_note=notes[randint(0,8)]
-    rand_length=lengths[randint(0,5)]
-    rand_pos_index=randint(4,8)
+    rand_section=randint(0, len(sections)-1)
+    rand_note=notes[randint(0, len(notes)-1)]
+    rand_length=lengths[randint(0, len(lengths)-1)]
+    rand_pos_index=randint(len(sections), len(positions)-1)
     rand_pos=positions[rand_pos_index]
-    positions[rand_pos_index]=sections[rand_section]['position']
-    sections[rand_section]['note']=rand_note
-    sections[rand_section]['length']=rand_length
-    sections[rand_section]['position']=rand_pos
+    if randint(1, 100)<=33:
+        print("pos switch")
+        positions[rand_pos_index]=sections[rand_section]['position']
+        sections[rand_section]['position']=rand_pos
+    else:
+        print("note switch")
+        sections[rand_section]['note']=rand_note
+        sections[rand_section]['length']=rand_length
     
-    print(", ".join([section['note'] for section in sections]))
-    for i in range(8):
+    print(", ".join([str(section['note']) for section in sections]))
+    for i in range(len(positions)):
         
         amount_values=0
         sum_values=[0,0,0,0]
@@ -72,7 +75,7 @@ while True:
         activated=get_highest(values)           
 
         note=False
-        for c in range(4):
+        for c in range(len(sections)):
             if sections[c]['position']==i:
                 note=sections[c]
                 break
