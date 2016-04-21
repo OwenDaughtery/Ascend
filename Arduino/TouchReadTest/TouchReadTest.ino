@@ -37,12 +37,11 @@ int scale = baseScale;
 void setup() {
 
   pinMode(2,INPUT_PULLUP);
-  pinMode(3,INPUT_PULLUP);
-  pinMode(4,INPUT_PULLUP);
 
   debouncer.attach(2);
   debouncer.interval(10);
   Serial.begin(115200);
+  dial.write(baseScale);
 }
 
 void loop() {
@@ -65,11 +64,12 @@ void loop() {
           }          
           
         
-        thresholds[i] = (2 * maxSamples[i]) - minSamples[i];
+        thresholds[i] = maxSamples[i] + ( maxSamples[i] - minSamples[i] );
       }
     }
 
     scale = dial.read();
+    
     if( scale < minScale ){
       dial.write(scale=minScale);
     }
@@ -88,6 +88,8 @@ void loop() {
     output = output * scale / baseScale;
     Serial.print( min( max( output, 0 ), 255) );
   }
+  Serial.print(",");
+  Serial.print(scale);
   Serial.println();
   delay(40);
 }
