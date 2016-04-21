@@ -2,14 +2,16 @@
 #include <elapsedMillis.h>
 #include <Bounce2.h>
 
-Encoder dial(3,4);
-Bounce debouncer = Bounce(); 
-elapsedMillis timeElapsed;
-
 #define numSensors 4
 #define minScale 5   // 1/20th
 #define maxScale 400 // 4x
 #define baseScale 100
+
+Encoder dial(3,4);
+Bounce debouncer = Bounce(); 
+elapsedMillis timeElapsed;
+
+int rawMode = 0;
 
 int readPins[4] = {
     A2,A3,A4,A5
@@ -37,7 +39,9 @@ int scale = baseScale;
 void setup() {
 
   pinMode(2,INPUT_PULLUP);
-
+  pinMode(11,INPUT_PULLUP);
+  pinMode(12,OUTPUT);
+  digitalWrite(12,LOW);
   debouncer.attach(2);
   debouncer.interval(10);
   Serial.begin(115200);
@@ -45,6 +49,7 @@ void setup() {
 }
 
 void loop() {
+    rawMode = digitalRead(11) == LOW;
     debouncer.update();
     timeElapsed = 0;
     if( debouncer.fell() ){
@@ -84,9 +89,20 @@ void loop() {
     }
 
     int temp = lasts[i] = touchRead( readPins[i] );
-    int output = temp-thresholds[i];
-    output = output * scale / baseScale;
-    Serial.print( min( max( output, 0 ), 255) );
+    if( rawMode ){
+        Serial.print( temp );
+    }
+    else {
+      int output = temp-thresholds[i];
+      output = output * scale / baseScale;
+      Serial.print( min( max( output, 0 ), 255) );
+    }
+  }
+  if( rawMode ){
+    for(int i=0;i<numSensors;i++){
+      Serial.print(",");
+      Serial.print( maxSamples[i] - minSamples[i] );
+    }
   }
   /*Serial.print(",");
   Serial.print(scale);*/

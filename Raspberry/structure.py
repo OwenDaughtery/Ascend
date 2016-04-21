@@ -5,7 +5,7 @@ from psonic import *
 from serial import *
 import serial.tools.list_ports
 port = list(serial.tools.list_ports.comports())[0][0]
-ser = serial.Serial(port, 9600)
+ser = serial.Serial(port, 115200)
 val = 0
 
 notes=[A3, B3, D4, E4, Fs4, A4, B4]
