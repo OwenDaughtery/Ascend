@@ -10,7 +10,8 @@ val = 0
 
 notes=[A3, B3, D4, E4, Fs4, A4, B4]
 lengths=[0.125, 0.25, 0.375, 0.5]
-values=[0, 0, 0, 0]
+max_values=[0, 0, 0, 0]
+
 positions=list(range(16))
 
 
@@ -41,7 +42,8 @@ for x in range(len(sections)):#populating dictonaries with randoms
     sections[x]['note']=rand_note
     sections[x]['length']=rand_length
     sections[x]['position']=rand_pos
-    
+
+
 while True:
 
     rand_section=randint(0, len(sections)-1)
@@ -59,20 +61,23 @@ while True:
         sections[rand_section]['length']=rand_length
     
     print(", ".join([str(section['note']) for section in sections]))
+    
     for i in range(len(positions)):
         
-        amount_values=0
-        sum_values=[0,0,0,0]
+        counter=0
         while ser.inWaiting()>0:
             line = ser.readline()
             valid=line.split(b',')
             if len(valid)!=4:
                 continue
             values=[int(x) for x in valid]
-            sum_values=[a + b for a, b in zip(values, sum_values)]
-            amount_values+=1
+            for b in range(len(max_values)):
+                if values[b]>max_values[b] or counter==0:
+                    max_values[b]=values[b]
+            counter+=1
+        amp_values=[a/255.0 for a in max_values]
 
-        activated=get_highest(values)           
+        activated=get_highest(max_values)           
 
         note=False
         for c in range(len(sections)):
@@ -80,7 +85,6 @@ while True:
                 note=sections[c]
                 break
         if note!=False:
-            play(note['note'], sustain=note['length'])
 
         sleep(signature/8)
         
