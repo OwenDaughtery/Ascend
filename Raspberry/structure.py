@@ -83,8 +83,10 @@ while True:
         for c in range(len(sections)):
             if sections[c]['position']==i:
                 note=sections[c]
+                note['amp']=amp_values[c%len(amp_values)]
                 break
         if note!=False:
+            play(note['note'], sustain=note['length'], amp=note['amp'])
 
         sleep(signature/8)
         
