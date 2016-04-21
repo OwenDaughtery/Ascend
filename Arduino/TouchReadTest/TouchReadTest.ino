@@ -88,8 +88,8 @@ void loop() {
     output = output * scale / baseScale;
     Serial.print( min( max( output, 0 ), 255) );
   }
-  Serial.print(",");
-  Serial.print(scale);
+  /*Serial.print(",");
+  Serial.print(scale);*/
   Serial.println();
   delay(40);
 }
