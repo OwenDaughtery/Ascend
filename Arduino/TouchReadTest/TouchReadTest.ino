@@ -7,6 +7,9 @@ Bounce debouncer = Bounce();
 elapsedMillis timeElapsed;
 
 #define numSensors 4
+#define minScale 5   // 1/20th
+#define maxScale 400 // 4x
+#define baseScale 100
 
 int readPins[4] = {
     A2,A3,A4,A5
@@ -29,6 +32,7 @@ long thresholds[4] = {
   0,0,0,0
 };
 
+int scale = baseScale;
 
 void setup() {
 
@@ -64,16 +68,25 @@ void loop() {
         thresholds[i] = (2 * maxSamples[i]) - minSamples[i];
       }
     }
+
+    scale = dial.read();
+    if( scale < minScale ){
+      dial.write(scale=minScale);
+    }
+    if( scale > maxScale ){
+      dial.write(scale=maxScale);
+    }
+    
   
-  // put your main code here, to run repeatedly:
   for(int i=0;i<numSensors;i++){
     if(i!=0){
       Serial.print(",");
     }
 
     int temp = lasts[i] = touchRead( readPins[i] );
-    
-    Serial.print( max( temp-thresholds[i], 0 ) );
+    int output = temp-thresholds[i];
+    output = output * scale / baseScale;
+    Serial.print( min( max( output, 0 ), 255) );
   }
   Serial.println();
   delay(250);
